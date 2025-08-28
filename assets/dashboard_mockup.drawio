@@ -1,0 +1,184 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/27.0.9 Chrome/134.0.6998.205 Electron/35.4.0 Safari/537.36" version="27.0.9" pages="4">
+  <diagram name="Sales" id="-Usha2KoaQtZTeXLfwTG">
+    <mxGraphModel dx="1426" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-0" />
+        <mxCell id="V2aYHXHg10h1eP0twKTM-1" parent="V2aYHXHg10h1eP0twKTM-0" />
+        <mxCell id="V2aYHXHg10h1eP0twKTM-2" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;Tab Sales&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="55" y="33" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-4" value="&lt;font size=&quot;3&quot;&gt;Ban revenue + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="40" y="150" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-5" value="&lt;font size=&quot;3&quot;&gt;Sparkline revenue for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="35" y="280" width="230" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-6" value="&lt;font size=&quot;3&quot;&gt;Ban number of sales + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="560" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-7" value="&lt;font size=&quot;3&quot;&gt;Sparkline number of sales for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="560" y="280" width="225" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-8" value="&lt;font size=&quot;3&quot;&gt;Ban profit + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="300" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-9" value="&lt;font size=&quot;3&quot;&gt;Sparkline profit for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="300" y="280" width="230" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-10" value="&lt;font size=&quot;3&quot;&gt;Ban average order value + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="815" y="150" width="125" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="V2aYHXHg10h1eP0twKTM-11" value="&lt;font size=&quot;3&quot;&gt;Sparkline average order value for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="815" y="280" width="230" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="xAKZr4yDnGP40m0FSZbZ-0" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Filters: state, city, delivery delay status, customer category, customer name&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="40" y="90" width="1030" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xAKZr4yDnGP40m0FSZbZ-3" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by states and cities&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="30" y="590" width="625" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="xAKZr4yDnGP40m0FSZbZ-5" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by delivery delay status&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="V2aYHXHg10h1eP0twKTM-1" vertex="1">
+          <mxGeometry x="560" y="410" width="495" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="u5IwC-LKd7gExrpydH-0-2" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by customer category&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="V2aYHXHg10h1eP0twKTM-1">
+          <mxGeometry x="35" y="410" width="495" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="u5IwC-LKd7gExrpydH-0-3" value="&lt;font size=&quot;3&quot;&gt;Geo map with metric selection capability&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="V2aYHXHg10h1eP0twKTM-1">
+          <mxGeometry x="692.5" y="590" width="370" height="360" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Customers" id="dwueZaoK_EHBcEo7W490">
+    <mxGraphModel dx="1426" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-0" />
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-1" parent="xqoNY0wVl4z-9npAq4z1-0" />
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-2" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;Tab Customers&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="30" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-3" value="&lt;font size=&quot;3&quot;&gt;Ban number of customers + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="40" y="150" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-4" value="&lt;font size=&quot;3&quot;&gt;Sparkline number of customers for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="35" y="270" width="235" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-7" value="&lt;font size=&quot;3&quot;&gt;Ban ARPPU + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="300" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-8" value="&lt;font size=&quot;3&quot;&gt;Sparkline ARPPU for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="300" y="270" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-9" value="&lt;font size=&quot;3&quot;&gt;Ban APC + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="550" y="150" width="125" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-10" value="&lt;font size=&quot;3&quot;&gt;Sparkline APC for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="550" y="270" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-11" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Filters: state, city, customer category, customer name&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="35" y="90" width="1030" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-13" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by states and cities&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="30" y="710" width="1005" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="xqoNY0wVl4z-9npAq4z1-16" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by customer category&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="40" y="410" width="1000" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="j6O9z8defmQcQBJZk3hH-0" value="&lt;font size=&quot;3&quot;&gt;Ban average number of products per order + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="790" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="j6O9z8defmQcQBJZk3hH-1" value="&lt;font size=&quot;3&quot;&gt;Sparkline average number of products per order for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xqoNY0wVl4z-9npAq4z1-1" vertex="1">
+          <mxGeometry x="790" y="270" width="250" height="110" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Prouducts" id="2aiKanC8FLXa0L-O8CSi">
+    <mxGraphModel dx="1426" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-0" />
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-1" parent="1NLHdSiujcg2WGTxcObQ-0" />
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-2" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;Tab Prouducts&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="30" y="33" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-3" value="&lt;font size=&quot;3&quot;&gt;Ban average revenue per product + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="40" y="150" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-4" value="&lt;font size=&quot;3&quot;&gt;Sparkline average revenue per product for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="35" y="270" width="255" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-5" value="&lt;font size=&quot;3&quot;&gt;Ban average profit per product + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="320" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-6" value="&lt;font size=&quot;3&quot;&gt;Sparkline average profit for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="320" y="270" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-7" value="&lt;font size=&quot;3&quot;&gt;Ban average number of products per order + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="560" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-8" value="&lt;font size=&quot;3&quot;&gt;Sparkline average number of products per order for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="560" y="270" width="230" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-9" value="&lt;font size=&quot;3&quot;&gt;Ban average product price + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="820" y="150" width="125" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-10" value="&lt;font size=&quot;3&quot;&gt;Sparkline average product price for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="820" y="270" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-11" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Filters: product category, internal packaging type, external packaging type&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="35" y="80" width="1030" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-13" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by internal packaging type&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="20" y="710" width="510" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-15" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by external packaging type&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="560" y="710" width="490" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="1NLHdSiujcg2WGTxcObQ-17" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Table with all metrics by product category&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1NLHdSiujcg2WGTxcObQ-1" vertex="1">
+          <mxGeometry x="20" y="400" width="1025" height="280" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Delivery &amp; Logistics" id="zLc8xFl6zv84GCKjB43W">
+    <mxGraphModel dx="1426" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-0" />
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-1" parent="-9aH6Mi2B-K6Hu13JlCS-0" />
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-2" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;Tab Delivery &amp;amp; Logistics&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="30" y="30" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-3" value="&lt;font size=&quot;3&quot;&gt;Ban average delivery time + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="40" y="150" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-4" value="&lt;font size=&quot;3&quot;&gt;Sparkline average delivery time for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="35" y="270" width="245" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-5" value="&lt;font size=&quot;3&quot;&gt;Ban percentage of delayed orders + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="320" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-6" value="&lt;font size=&quot;3&quot;&gt;Sparkline percentage of delayed orders for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="320" y="270" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-7" value="&lt;font size=&quot;3&quot;&gt;Ban average time from creation to picking + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="810" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-8" value="&lt;font size=&quot;3&quot;&gt;Sparkline average time from creation to picking for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="810" y="270" width="240" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-11" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Filters: state, city, customer category, customer name&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="35" y="80" width="1030" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-9aH6Mi2B-K6Hu13JlCS-14" value="&lt;font size=&quot;3&quot;&gt;Table with all metrics by states and cities&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="30" y="400" width="1020" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="CX5pCTG2cvD3EoKb0nKh-4" value="&lt;font size=&quot;3&quot;&gt;Ban average delivery delay + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="560" y="150" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="CX5pCTG2cvD3EoKb0nKh-5" value="&lt;font size=&quot;3&quot;&gt;Sparkline average delivery delay for the last year by month + YoY&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="-9aH6Mi2B-K6Hu13JlCS-1" vertex="1">
+          <mxGeometry x="560" y="270" width="220" height="110" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
