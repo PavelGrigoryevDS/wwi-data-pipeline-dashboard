@@ -39,7 +39,9 @@ End-to-end data pipeline and interactive dashboard for Wide World Importers. Fea
 
 **Stack:**
 
-`Python` | `SQL` | `PostgreSQL` | `Sqlalchemy` | `Jupyter` | `Yandex DataLens` | `Airflow` | `DBLink`
+- **Data & Databases:** `Python` `SQL` `PostgreSQL` `Sqlalchemy` `DBLink`
+- **Analytics & BI:** `Yandex DataLens`
+- **Automation:** `Airflow`
 
 **Methods & Technologies**:
 
@@ -115,7 +117,7 @@ The official Microsoft Wide World Importers sample database (OLTP schema) [Micro
 
 ## 📊 Dashboard Preview
 
-[👉 Interactive Dashboard in Yandex DataLens](https://datalens.yandex/42t45uco5jxup)
+[👉 WWI Business Performance Overview Dashboard](https://datalens.yandex/42t45uco5jxup)
 
 Here are the key screenshots of the implemented dashboard:
 
