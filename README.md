@@ -1,11 +1,13 @@
 # 🌐 WWI Data Pipeline and Dashboard
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)](https://github.com/PavelGrigoryevDS/wwi-data-pipeline-dashboard/blob/main/pyproject.toml)
+[![Web Report](https://img.shields.io/badge/🌐_Web_Report-blue?logoColor=white)](https://pavelgrigoryevds.github.io/wwi-data-pipeline-dashboard/)
 [![Jupyter Notebook](https://img.shields.io/badge/-Notebook-F37626?logo=jupyter&logoColor=white)](https://github.com/PavelGrigoryevDS/wwi-data-pipeline-dashboard/blob/main/wwi-data-pipeline-dashboard.ipynb)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 End-to-end data pipeline and interactive dashboard for Wide World Importers. Features ETL process, star schema data warehouse, and business performance analytics.
 
+**📖 For comfortable reading:** [Web version](https://pavelgrigoryevds.github.io/wwi-data-pipeline-dashboard/)
 
 <a id="contents"></a>
 
