@@ -1,0 +1,767 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Creating Materialized Views &#8212; #🌐 WWI Data Pipeline and Dashboard</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=aa5847ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/custom.js?v=f9582d1e"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'contents/04_creating_materialized_views';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ETL Process (Airflow DAG)" href="05_etl_process.html" />
+    <link rel="prev" title="Designing the Analytical Database" href="03_designing_the_analytical_database.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.jpg" class="logo__image only-light" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>
+    <script>document.write(`<img src="../_static/logo-dark.jpg" class="logo__image only-dark" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    🌐 WWI Data Pipeline and Dashboard
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_database_connection.html">Database Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_data_description_and_exploration.html">Data Description and Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_designing_the_analytical_database.html">Designing the Analytical Database</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Creating Materialized Views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_etl_process.html">ETL Process (Airflow DAG)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_dashboard_canvas.html">Dashboard Canvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_dashboard_mockup.html">Dashboard Mockup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_compiling_brief_documentation.html">Compiling Brief Documentation for the Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_final_dashboard.html">Final Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_general_conclusion.html">General Conclusion</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/PavelGrigoryevDS/wwi-data-pipeline-dashboard" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/contents/04_creating_materialized_views.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Creating Materialized Views</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orders-materialized-view">Orders Materialized View</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#products-materialized-view">Products Materialized View</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="creating-materialized-views">
+<h1>Creating Materialized Views<a class="headerlink" href="#creating-materialized-views" title="Link to this heading">#</a></h1>
+<p>To optimize data loading into the dashboard, let’s create materialized views.</p>
+<section id="orders-materialized-view">
+<h2>Orders Materialized View<a class="headerlink" href="#orders-materialized-view" title="Link to this heading">#</a></h2>
+<p>Create a materialized view for all metrics at the order level.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span>
+<span class="n">CREATE</span> <span class="n">MATERIALIZED</span> <span class="n">VIEW</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_orders</span> <span class="n">AS</span>
+<span class="n">WITH</span> <span class="n">invoices_agg</span> <span class="n">AS</span> <span class="p">(</span>
+    <span class="n">SELECT</span>
+        <span class="n">fi</span><span class="o">.</span><span class="n">order_id</span>
+        <span class="p">,</span> <span class="n">COUNT</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">invoice_id</span><span class="p">)</span> <span class="n">AS</span> <span class="n">invoices_count</span>
+        <span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">invoice_amount</span><span class="p">)</span> <span class="n">AS</span> <span class="n">amount</span>
+        <span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">paid_amount</span><span class="p">)</span> <span class="n">AS</span> <span class="n">paid_amount</span>
+        <span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">invoice_profit</span><span class="p">)</span> <span class="n">AS</span> <span class="n">profit</span>
+        <span class="p">,</span> <span class="n">STRING_AGG</span><span class="p">(</span><span class="n">DISTINCT</span> <span class="n">ddm</span><span class="o">.</span><span class="n">delivery_method_name</span><span class="p">,</span> <span class="s1">&#39; | &#39;</span> <span class="n">ORDER</span> <span class="n">BY</span> <span class="n">ddm</span><span class="o">.</span><span class="n">delivery_method_name</span><span class="p">)</span> <span class="n">AS</span> <span class="n">delivery_methods</span>
+        <span class="p">,</span> <span class="n">MIN</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">invoice_date</span><span class="p">)</span> <span class="n">AS</span> <span class="n">first_invoice_date</span>
+        <span class="p">,</span> <span class="n">MAX</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">invoice_date</span><span class="p">)</span> <span class="n">AS</span> <span class="n">last_invoice_date</span>
+        <span class="p">,</span> <span class="n">MIN</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">confirmed_delivery_time</span><span class="p">)</span> <span class="n">AS</span> <span class="n">first_delivery_time</span>
+        <span class="p">,</span> <span class="n">MAX</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">confirmed_delivery_time</span><span class="p">)</span> <span class="n">AS</span> <span class="n">last_delivery_time</span>
+        <span class="p">,</span> <span class="n">BOOL_OR</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">is_delivered</span><span class="p">)</span> <span class="n">AS</span> <span class="n">is_any_delivered</span>
+        <span class="p">,</span> <span class="n">BOOL_AND</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">is_delivered</span><span class="p">)</span> <span class="n">AS</span> <span class="n">is_all_delivered</span>
+		<span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">fi</span><span class="o">.</span><span class="n">is_delivered</span> <span class="n">THEN</span> <span class="n">fi</span><span class="o">.</span><span class="n">invoice_amount</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">)</span> <span class="n">AS</span> <span class="n">delivered_amount</span>
+		<span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">fi</span><span class="o">.</span><span class="n">is_delivered</span> <span class="n">THEN</span> <span class="n">fi</span><span class="o">.</span><span class="n">paid_amount</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">)</span> <span class="n">AS</span> <span class="n">paid_delivered_amount</span>
+    <span class="n">FROM</span>
+        <span class="n">analytics</span><span class="o">.</span><span class="n">fact_invoices</span> <span class="n">fi</span>
+        <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_delivery_methods</span> <span class="n">ddm</span> <span class="n">ON</span> <span class="n">fi</span><span class="o">.</span><span class="n">delivery_method_id</span> <span class="o">=</span> <span class="n">ddm</span><span class="o">.</span><span class="n">delivery_method_id</span>
+    <span class="n">GROUP</span> <span class="n">BY</span>
+        <span class="n">fi</span><span class="o">.</span><span class="n">order_id</span>
+<span class="p">),</span>
+<span class="n">order_lines_agg</span> <span class="n">AS</span> <span class="p">(</span>
+    <span class="n">SELECT</span> 
+        <span class="n">fol</span><span class="o">.</span><span class="n">order_id</span>
+        <span class="p">,</span> <span class="n">COUNT</span><span class="p">(</span><span class="n">fol</span><span class="o">.</span><span class="n">order_line_id</span><span class="p">)</span> <span class="n">AS</span> <span class="n">order_lines_count</span>
+        <span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">fol</span><span class="o">.</span><span class="n">quantity</span><span class="p">)</span> <span class="n">AS</span> <span class="n">total_quantity</span>
+        <span class="p">,</span> <span class="n">COUNT</span><span class="p">(</span><span class="n">DISTINCT</span> <span class="n">fol</span><span class="o">.</span><span class="n">stock_item_id</span><span class="p">)</span> <span class="n">AS</span> <span class="n">unique_products_count</span>
+        <span class="p">,</span> <span class="n">STRING_AGG</span><span class="p">(</span><span class="n">DISTINCT</span> <span class="n">dp</span><span class="o">.</span><span class="n">stock_item_name</span><span class="p">,</span> <span class="s1">&#39; | &#39;</span> <span class="n">ORDER</span> <span class="n">BY</span> <span class="n">dp</span><span class="o">.</span><span class="n">stock_item_name</span><span class="p">)</span> <span class="n">AS</span> <span class="n">products_list</span>
+    <span class="n">FROM</span>
+        <span class="n">analytics</span><span class="o">.</span><span class="n">fact_order_lines</span> <span class="n">fol</span>
+        <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_products</span> <span class="n">dp</span> 
+        	<span class="n">ON</span> <span class="n">fol</span><span class="o">.</span><span class="n">stock_item_id</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">stock_item_id</span>
+        	<span class="n">AND</span> <span class="n">dp</span><span class="o">.</span><span class="n">current_record</span> <span class="o">=</span> <span class="n">TRUE</span>
+    <span class="n">GROUP</span> <span class="n">BY</span>
+        <span class="n">fol</span><span class="o">.</span><span class="n">order_id</span>
+<span class="p">),</span>
+<span class="n">last_delivery_attempts_per_invoice</span> <span class="n">AS</span> <span class="p">(</span>
+    <span class="n">SELECT</span> <span class="n">DISTINCT</span> <span class="n">ON</span> <span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">invoice_id</span><span class="p">)</span>
+        <span class="n">fi</span><span class="o">.</span><span class="n">invoice_id</span><span class="p">,</span>
+        <span class="n">fi</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+        <span class="n">fi</span><span class="o">.</span><span class="n">invoice_date</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">event</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)::</span><span class="n">numeric</span> <span class="n">AS</span> <span class="n">delivery_latitude</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">event</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)::</span><span class="n">numeric</span> <span class="n">AS</span> <span class="n">delivery_longitude</span>
+    <span class="n">FROM</span>
+        <span class="n">analytics</span><span class="o">.</span><span class="n">fact_invoices</span> <span class="n">fi</span>
+        <span class="n">CROSS</span> <span class="n">JOIN</span> <span class="n">LATERAL</span> <span class="n">jsonb_array_elements</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">returned_delivery_data</span><span class="p">::</span><span class="n">jsonb</span><span class="o">-&gt;</span><span class="s1">&#39;Events&#39;</span><span class="p">)</span> <span class="n">AS</span> <span class="n">event</span>
+    <span class="n">WHERE</span> 
+        <span class="n">event</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;Event&#39;</span> <span class="o">=</span> <span class="s1">&#39;DeliveryAttempt&#39;</span>
+        <span class="n">AND</span> <span class="n">event</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;Latitude&#39;</span> <span class="n">IS</span> <span class="n">NOT</span> <span class="n">NULL</span>
+        <span class="n">AND</span> <span class="n">event</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;Longitude&#39;</span> <span class="n">IS</span> <span class="n">NOT</span> <span class="n">NULL</span>
+    <span class="n">ORDER</span> <span class="n">BY</span> 
+        <span class="n">fi</span><span class="o">.</span><span class="n">invoice_id</span><span class="p">,</span> 
+        <span class="p">(</span><span class="n">event</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;EventTime&#39;</span><span class="p">)::</span><span class="n">timestamp</span> <span class="n">DESC</span>
+<span class="p">),</span>
+<span class="n">last_delivery_coordinates_per_order</span> <span class="n">AS</span> <span class="p">(</span>
+    <span class="n">SELECT</span> <span class="n">DISTINCT</span> <span class="n">ON</span> <span class="p">(</span><span class="n">ldai</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+        <span class="n">ldai</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+        <span class="n">ldai</span><span class="o">.</span><span class="n">delivery_latitude</span> <span class="n">AS</span> <span class="n">last_delivery_latitude</span><span class="p">,</span>
+        <span class="n">ldai</span><span class="o">.</span><span class="n">delivery_longitude</span> <span class="n">AS</span> <span class="n">last_delivery_longitude</span>
+    <span class="n">FROM</span>
+        <span class="n">last_delivery_attempts_per_invoice</span> <span class="n">ldai</span>
+    <span class="n">ORDER</span> <span class="n">BY</span>
+        <span class="n">ldai</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+        <span class="n">ldai</span><span class="o">.</span><span class="n">invoice_date</span> <span class="n">DESC</span>
+<span class="p">)</span>
+<span class="n">SELECT</span>
+    <span class="n">fo</span><span class="o">.</span><span class="n">order_id</span>
+    <span class="p">,</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_date</span>
+    <span class="p">,</span> <span class="n">fo</span><span class="o">.</span><span class="n">expected_delivery_date</span>
+    <span class="p">,</span> <span class="n">fo</span><span class="o">.</span><span class="n">picking_completed_when</span>
+    <span class="p">,</span> <span class="n">fo</span><span class="o">.</span><span class="n">customer_id</span>
+    <span class="p">,</span> <span class="n">dc</span><span class="o">.</span><span class="n">customer_name</span>
+    <span class="p">,</span> <span class="n">dc</span><span class="o">.</span><span class="n">customer_category_name</span>
+    <span class="p">,</span> <span class="n">dc</span><span class="o">.</span><span class="n">state_province_name</span> <span class="n">AS</span> <span class="n">customer_state</span>
+    <span class="p">,</span> <span class="n">dc</span><span class="o">.</span><span class="n">city_name</span> <span class="n">AS</span> <span class="n">customer_city</span>
+    <span class="o">--</span> <span class="n">Invoice</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">invoices_count</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">amount</span> <span class="n">AS</span> <span class="n">total_amount</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">paid_amount</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">profit</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">delivery_methods</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">first_invoice_date</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">last_invoice_date</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">first_delivery_time</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">last_delivery_time</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">is_any_delivered</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">is_all_delivered</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">delivered_amount</span>
+    <span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">paid_delivered_amount</span>
+    <span class="p">,</span> <span class="n">ldco</span><span class="o">.</span><span class="n">last_delivery_latitude</span>
+    <span class="p">,</span> <span class="n">ldco</span><span class="o">.</span><span class="n">last_delivery_longitude</span>    
+    <span class="o">--</span> <span class="n">Order_line</span>
+    <span class="p">,</span> <span class="n">ola</span><span class="o">.</span><span class="n">order_lines_count</span>
+    <span class="p">,</span> <span class="n">ola</span><span class="o">.</span><span class="n">total_quantity</span>
+    <span class="p">,</span> <span class="n">ola</span><span class="o">.</span><span class="n">unique_products_count</span>
+    <span class="p">,</span> <span class="n">ola</span><span class="o">.</span><span class="n">products_list</span>
+    <span class="o">--</span> <span class="n">Calculated</span> <span class="n">metrics</span>
+    <span class="p">,</span> <span class="n">ROUND</span><span class="p">((</span><span class="n">ia</span><span class="o">.</span><span class="n">paid_amount</span> <span class="o">/</span> <span class="n">NULLIF</span><span class="p">(</span><span class="n">ia</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span> <span class="n">AS</span> <span class="n">paid_share</span>
+    <span class="p">,</span> <span class="p">(</span><span class="n">ia</span><span class="o">.</span><span class="n">last_delivery_time</span><span class="p">::</span><span class="n">DATE</span> <span class="o">-</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_date</span><span class="p">::</span><span class="n">DATE</span><span class="p">)</span> <span class="n">AS</span> <span class="n">days_to_delivery</span>
+    <span class="p">,</span> <span class="p">(</span><span class="n">ia</span><span class="o">.</span><span class="n">last_delivery_time</span><span class="p">::</span><span class="n">DATE</span> <span class="o">-</span> <span class="n">fo</span><span class="o">.</span><span class="n">expected_delivery_date</span><span class="p">::</span><span class="n">DATE</span><span class="p">)</span> <span class="n">AS</span> <span class="n">delivery_delay_days</span>
+    <span class="p">,</span> <span class="p">(</span><span class="n">fo</span><span class="o">.</span><span class="n">picking_completed_when</span><span class="p">::</span><span class="n">DATE</span> <span class="o">-</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_date</span><span class="p">::</span><span class="n">DATE</span><span class="p">)</span> <span class="n">AS</span> <span class="n">days_to_picking</span>
+    <span class="p">,</span> <span class="p">(</span><span class="n">ia</span><span class="o">.</span><span class="n">last_delivery_time</span><span class="p">::</span><span class="n">DATE</span> <span class="o">-</span> <span class="n">fo</span><span class="o">.</span><span class="n">picking_completed_when</span><span class="p">::</span><span class="n">DATE</span><span class="p">)</span> <span class="n">AS</span> <span class="n">days_to_deliver_after_picking</span>
+    <span class="p">,</span> <span class="n">CASE</span>
+        <span class="n">WHEN</span> <span class="n">ia</span><span class="o">.</span><span class="n">last_delivery_time</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">OR</span> <span class="n">fo</span><span class="o">.</span><span class="n">expected_delivery_date</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="n">NULL</span>  
+        <span class="n">WHEN</span> <span class="n">ia</span><span class="o">.</span><span class="n">last_delivery_time</span><span class="p">::</span><span class="n">DATE</span> <span class="o">&gt;</span> <span class="n">fo</span><span class="o">.</span><span class="n">expected_delivery_date</span><span class="p">::</span><span class="n">DATE</span> <span class="n">THEN</span> <span class="n">TRUE</span> 
+        <span class="n">ELSE</span> <span class="n">FALSE</span> 
+    <span class="n">END</span> <span class="n">AS</span> <span class="n">is_late_delivery</span>
+<span class="n">FROM</span>
+    <span class="n">analytics</span><span class="o">.</span><span class="n">fact_orders</span> <span class="n">fo</span>
+    <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_customers</span> <span class="n">dc</span> 
+    	<span class="n">ON</span> <span class="n">fo</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">customer_id</span>
+    	<span class="n">AND</span> <span class="n">dc</span><span class="o">.</span><span class="n">current_record</span> <span class="o">=</span> <span class="n">TRUE</span>
+    <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">invoices_agg</span> <span class="n">ia</span> <span class="n">ON</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">ia</span><span class="o">.</span><span class="n">order_id</span>
+    <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">order_lines_agg</span> <span class="n">ola</span> <span class="n">ON</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">ola</span><span class="o">.</span><span class="n">order_id</span>
+    <span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">last_delivery_coordinates_per_order</span> <span class="n">ldco</span> <span class="n">ON</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">ldco</span><span class="o">.</span><span class="n">order_id</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Create indexes to speed up dashboard performance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_orders_order_id</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_orders</span><span class="p">(</span><span class="n">order_id</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_orders_customer_id</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_orders</span><span class="p">(</span><span class="n">customer_id</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_orders_order_date</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_orders</span><span class="p">(</span><span class="n">order_date</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_orders_customer_state</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_orders</span><span class="p">(</span><span class="n">customer_state</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_orders_is_late_delivery</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_orders</span><span class="p">(</span><span class="n">is_late_delivery</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_orders_is_all_delivered</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_orders</span><span class="p">(</span><span class="n">is_all_delivered</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="products-materialized-view">
+<h2>Products Materialized View<a class="headerlink" href="#products-materialized-view" title="Link to this heading">#</a></h2>
+<p>Create a materialized view for all metrics at the product level.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span>
+<span class="n">CREATE</span> <span class="n">MATERIALIZED</span> <span class="n">VIEW</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_products</span> <span class="n">AS</span>
+<span class="n">WITH</span> <span class="n">invoices_agg</span> <span class="n">AS</span> <span class="p">(</span>
+    <span class="n">SELECT</span>
+        <span class="n">fi</span><span class="o">.</span><span class="n">order_id</span>
+        <span class="p">,</span> <span class="n">BOOL_OR</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">is_delivered</span><span class="p">)</span> <span class="n">AS</span> <span class="n">is_any_delivered</span>
+    <span class="n">FROM</span>
+        <span class="n">analytics</span><span class="o">.</span><span class="n">fact_invoices</span> <span class="n">fi</span>
+    <span class="n">GROUP</span> <span class="n">BY</span>
+        <span class="n">fi</span><span class="o">.</span><span class="n">order_id</span>
+<span class="p">)</span>
+<span class="n">SELECT</span>
+	<span class="n">fo</span><span class="o">.</span><span class="n">order_id</span>
+	<span class="p">,</span> <span class="n">ia</span><span class="o">.</span><span class="n">is_any_delivered</span>
+	<span class="p">,</span> <span class="n">fol</span><span class="o">.</span><span class="n">order_line_id</span>
+	<span class="p">,</span> <span class="n">fol</span><span class="o">.</span><span class="n">stock_item_id</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">stock_item_name</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">stock_group_names</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">color_name</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">unit_package_type_name</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">outer_package_type_name</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">brand</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">size</span>
+	<span class="p">,</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_date</span>
+	<span class="p">,</span> <span class="n">fol</span><span class="o">.</span><span class="n">quantity</span>
+	<span class="p">,</span> <span class="n">fol</span><span class="o">.</span><span class="n">unit_price</span>
+	<span class="p">,</span> <span class="n">fol</span><span class="o">.</span><span class="n">il_quantity</span>
+	<span class="p">,</span> <span class="n">fol</span><span class="o">.</span><span class="n">il_extended_price</span>
+	<span class="p">,</span> <span class="n">fol</span><span class="o">.</span><span class="n">il_line_profit</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">brand</span> <span class="n">IS</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">AS</span> <span class="n">has_brand</span>
+	<span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">size</span> <span class="n">IS</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">AS</span> <span class="n">has_size</span>
+<span class="n">FROM</span>
+	<span class="n">analytics</span><span class="o">.</span><span class="n">fact_orders</span> <span class="n">fo</span> 
+	<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">invoices_agg</span> <span class="n">ia</span> <span class="n">ON</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">ia</span><span class="o">.</span><span class="n">order_id</span>
+	<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">analytics</span><span class="o">.</span><span class="n">fact_order_lines</span> <span class="n">fol</span> <span class="n">ON</span> <span class="n">fo</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">fol</span><span class="o">.</span><span class="n">order_id</span>
+	<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_products</span> <span class="n">dp</span> <span class="n">ON</span> <span class="n">fol</span><span class="o">.</span><span class="n">stock_item_id</span> <span class="o">=</span><span class="n">dp</span><span class="o">.</span><span class="n">stock_item_id</span>
+		<span class="n">AND</span> <span class="n">dp</span><span class="o">.</span><span class="n">current_record</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Create indexes to speed up dashboard performance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_products_id</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_products</span><span class="p">(</span><span class="n">stock_item_id</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_products_name</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_products</span><span class="p">(</span><span class="n">stock_item_name</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_products_brand</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_products</span><span class="p">(</span><span class="n">brand</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">idx_mv_products_group</span> <span class="n">ON</span> <span class="n">analytics</span><span class="o">.</span><span class="n">mv_products</span><span class="p">(</span><span class="n">stock_group_names</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_designing_the_analytical_database.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Designing the Analytical Database</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05_etl_process.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ETL Process (Airflow DAG)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orders-materialized-view">Orders Materialized View</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#products-materialized-view">Products Materialized View</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Pavel Grigoryev
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Pavel Grigoryev.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

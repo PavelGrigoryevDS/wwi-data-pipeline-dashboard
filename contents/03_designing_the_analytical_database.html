@@ -1,0 +1,1004 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Designing the Analytical Database &#8212; #🌐 WWI Data Pipeline and Dashboard</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=aa5847ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/custom.js?v=f9582d1e"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'contents/03_designing_the_analytical_database';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Creating Materialized Views" href="04_creating_materialized_views.html" />
+    <link rel="prev" title="Data Description and Exploration" href="02_data_description_and_exploration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.jpg" class="logo__image only-light" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>
+    <script>document.write(`<img src="../_static/logo-dark.jpg" class="logo__image only-dark" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    🌐 WWI Data Pipeline and Dashboard
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_database_connection.html">Database Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_data_description_and_exploration.html">Data Description and Exploration</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Designing the Analytical Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_creating_materialized_views.html">Creating Materialized Views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_etl_process.html">ETL Process (Airflow DAG)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_dashboard_canvas.html">Dashboard Canvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_dashboard_mockup.html">Dashboard Mockup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_compiling_brief_documentation.html">Compiling Brief Documentation for the Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_final_dashboard.html">Final Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_general_conclusion.html">General Conclusion</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/PavelGrigoryevDS/wwi-data-pipeline-dashboard" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/contents/03_designing_the_analytical_database.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Designing the Analytical Database</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#database-schema-selection">Database Schema Selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dimension-tables">Dimension Tables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customers">Customers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#products">Products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dates">Dates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delivery-methods">Delivery Methods</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fact-tables">Fact Tables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#orders">Orders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invoices">Invoices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-lines">Order Lines</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="designing-the-analytical-database">
+<h1>Designing the Analytical Database<a class="headerlink" href="#designing-the-analytical-database" title="Link to this heading">#</a></h1>
+<section id="database-schema-selection">
+<h2>Database Schema Selection<a class="headerlink" href="#database-schema-selection" title="Link to this heading">#</a></h2>
+<p>Let’s create an analytical database wwi_analytics for the dashboard.</p>
+<p>To do this, we will transform the OLTP (current structure) to OLAP.</p>
+<p>We will use a star schema as it is optimally suited for analytical databases.</p>
+<p>Let’s switch to the analytical database.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">con</span><span class="p">(</span><span class="s1">&#39;dst&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Connected to dst
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s create a new schema where we will create the tables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span>
+<span class="n">CREATE</span> <span class="n">SCHEMA</span> <span class="n">analytics</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Install the dblink extension for communication between databases.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span>
+<span class="n">CREATE</span> <span class="n">EXTENSION</span> <span class="n">IF</span> <span class="n">NOT</span> <span class="n">EXISTS</span> <span class="n">dblink</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Form the connection string for dblink.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dblink_conn_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    host=</span><span class="si">{</span><span class="n">src_db_config</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span>
+<span class="s2">    dbname=</span><span class="si">{</span><span class="n">src_db_config</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span>
+<span class="s2">    user=</span><span class="si">{</span><span class="n">src_db_config</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span>
+<span class="s2">    password=</span><span class="si">{</span><span class="n">src_db_config</span><span class="p">[</span><span class="s1">&#39;pwd&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">    port=</span><span class="si">{</span><span class="n">src_db_config</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dimension-tables">
+<h2>Dimension Tables<a class="headerlink" href="#dimension-tables" title="Link to this heading">#</a></h2>
+<section id="customers">
+<h3>Customers<a class="headerlink" href="#customers" title="Link to this heading">#</a></h3>
+<p>Create a dimension table for customers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">wwi_analytics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">stmt</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE analytics.dim_customers AS</span>
+<span class="s2">        SELECT * FROM dblink(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">dblink_conn_str</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">            , &#39;SELECT </span>
+<span class="s2">                c.customer_id</span>
+<span class="s2">                , c.customer_name</span>
+<span class="s2">                , cc.customer_category_name</span>
+<span class="s2">                , ci.city_name</span>
+<span class="s2">                , sp.state_province_name</span>
+<span class="s2">                , CURRENT_DATE AS valid_from</span>
+<span class="s2">                , NULL::DATE AS valid_to</span>
+<span class="s2">                , TRUE AS current_record </span>
+<span class="s2">            FROM</span>
+<span class="s2">                sales.customers c</span>
+<span class="s2">                LEFT JOIN sales.customer_categories cc ON c.customer_category_id = cc.customer_category_id</span>
+<span class="s2">                LEFT JOIN application.cities ci ON c.delivery_city_id = ci.city_id</span>
+<span class="s2">                LEFT JOIN application.state_provinces sp ON ci.state_province_id = sp.state_province_id&#39;</span>
+<span class="s2">        ) AS t(</span>
+<span class="s2">            customer_id INT</span>
+<span class="s2">            , customer_name TEXT</span>
+<span class="s2">            , customer_category_name TEXT</span>
+<span class="s2">            , city_name TEXT</span>
+<span class="s2">            , state_province_name TEXT</span>
+<span class="s2">            , valid_from DATE</span>
+<span class="s2">            , valid_to DATE</span>
+<span class="s2">            , current_record BOOLEAN            </span>
+<span class="s2">        );</span>
+
+<span class="s2">        ALTER TABLE analytics.dim_customers ADD PRIMARY KEY (customer_id);</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="products">
+<h3>Products<a class="headerlink" href="#products" title="Link to this heading">#</a></h3>
+<p>Create a dimension table for products.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">wwi_analytics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">stmt</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE analytics.dim_products AS</span>
+<span class="s2">        SELECT * FROM dblink(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">dblink_conn_str</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">            , &#39;WITH stock_groups_agg AS (</span>
+<span class="s2">                SELECT </span>
+<span class="s2">                    sisg.stock_item_id</span>
+<span class="s2">                    , STRING_AGG(sg.stock_group_name, &#39;&#39;, &#39;&#39;) AS stock_group_names</span>
+<span class="s2">                FROM</span>
+<span class="s2">                    warehouse.stock_item_stock_groups sisg </span>
+<span class="s2">                    LEFT JOIN warehouse.stock_groups sg ON sisg.stock_group_id  = sg.stock_group_id</span>
+<span class="s2">                GROUP BY</span>
+<span class="s2">                    sisg.stock_item_id</span>
+<span class="s2">            )</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                si.stock_item_id</span>
+<span class="s2">                , si.stock_item_name</span>
+<span class="s2">                , sg.stock_group_names</span>
+<span class="s2">                , c.color_name</span>
+<span class="s2">                , ptu.package_type_name AS unit_package_type_name</span>
+<span class="s2">                , pto.package_type_name AS outer_package_type_name</span>
+<span class="s2">                , si.brand</span>
+<span class="s2">                , si.size</span>
+<span class="s2">                , CURRENT_DATE AS valid_from</span>
+<span class="s2">                , NULL::DATE AS valid_to</span>
+<span class="s2">                , TRUE AS current_record                </span>
+<span class="s2">            FROM</span>
+<span class="s2">                warehouse.stock_items si</span>
+<span class="s2">                LEFT JOIN stock_groups_agg sg ON si.stock_item_id = sg.stock_item_id</span>
+<span class="s2">                LEFT JOIN warehouse.package_types ptu ON si.unit_package_id = ptu.package_type_id</span>
+<span class="s2">                LEFT JOIN warehouse.package_types pto ON si.outer_package_id = pto.package_type_id</span>
+<span class="s2">                LEFT JOIN warehouse.colors c ON c.color_id = si.color_id&#39;</span>
+<span class="s2">        ) AS t(</span>
+<span class="s2">            stock_item_id INT</span>
+<span class="s2">            , stock_item_name TEXT</span>
+<span class="s2">            , stock_group_names TEXT</span>
+<span class="s2">            , color_name TEXT</span>
+<span class="s2">            , unit_package_type_name TEXT</span>
+<span class="s2">            , outer_package_type_name TEXT</span>
+<span class="s2">            , brand TEXT</span>
+<span class="s2">            , size TEXT</span>
+<span class="s2">            , valid_from DATE</span>
+<span class="s2">            , valid_to DATE</span>
+<span class="s2">            , current_record BOOLEAN</span>
+<span class="s2">        );</span>
+
+<span class="s2">        ALTER TABLE analytics.dim_products ADD PRIMARY KEY (stock_item_id)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dates">
+<h3>Dates<a class="headerlink" href="#dates" title="Link to this heading">#</a></h3>
+<p>Create a dimension table for dates.</p>
+<p>Select a range from 1 year before the minimum date in the database to 1 year after the maximum date in the database.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">wwi_analytics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">stmt</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE analytics.dim_dates AS</span>
+<span class="s2">        SELECT * FROM dblink(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">dblink_conn_str</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">            , &#39;WITH date_range AS (</span>
+<span class="s2">                SELECT </span>
+<span class="s2">                    MIN(order_date) AS min_date</span>
+<span class="s2">                    , MAX(confirmed_delivery_time::DATE) AS max_date</span>
+<span class="s2">                FROM </span>
+<span class="s2">                    sales.orders o</span>
+<span class="s2">                JOIN </span>
+<span class="s2">                    sales.invoices i ON o.order_id = i.order_id</span>
+<span class="s2">            )</span>
+<span class="s2">            SELECT</span>
+<span class="s2">                date_series::DATE AS date_id</span>
+<span class="s2">                , EXTRACT(DAY FROM date_series)::INT AS day</span>
+<span class="s2">                , EXTRACT(MONTH FROM date_series)::INT AS month</span>
+<span class="s2">                , EXTRACT(YEAR FROM date_series)::INT AS year</span>
+<span class="s2">                , EXTRACT(QUARTER FROM date_series)::INT AS quarter</span>
+<span class="s2">                , EXTRACT(DOW FROM date_series)::INT + 1 AS day_of_week</span>
+<span class="s2">                , TO_CHAR(date_series, &#39;&#39;Day&#39;&#39;) AS day_name</span>
+<span class="s2">                , EXTRACT(DOW FROM date_series) IN (0, 6) AS is_weekend</span>
+<span class="s2">                , TO_CHAR(date_series, &#39;&#39;Month&#39;&#39;) AS month_name</span>
+<span class="s2">            FROM </span>
+<span class="s2">                GENERATE_SERIES(</span>
+<span class="s2">                    (SELECT min_date - INTERVAL &#39;&#39;1 year&#39;&#39; FROM date_range)</span>
+<span class="s2">                    , (SELECT max_date + INTERVAL &#39;&#39;1 year&#39;&#39; FROM date_range)</span>
+<span class="s2">                    , &#39;&#39;1 day&#39;&#39;</span>
+<span class="s2">                ) AS date_series;&#39;</span>
+<span class="s2">        ) AS t(</span>
+<span class="s2">            date_id DATE</span>
+<span class="s2">            , day INT</span>
+<span class="s2">            , month INT</span>
+<span class="s2">            , year INT</span>
+<span class="s2">            , quarter INT</span>
+<span class="s2">            , day_of_week INT</span>
+<span class="s2">            , day_name TEXT</span>
+<span class="s2">            , is_weekend BOOLEAN</span>
+<span class="s2">            , month_name TEXT</span>
+<span class="s2">        );</span>
+
+<span class="s2">        ALTER TABLE analytics.dim_dates ADD PRIMARY KEY (date_id)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="delivery-methods">
+<h3>Delivery Methods<a class="headerlink" href="#delivery-methods" title="Link to this heading">#</a></h3>
+<p>Create a dimension table for delivery methods.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">wwi_analytics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">stmt</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE analytics.dim_delivery_methods AS</span>
+<span class="s2">        SELECT * FROM dblink(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">dblink_conn_str</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">            , &#39;SELECT </span>
+<span class="s2">                delivery_method_id</span>
+<span class="s2">                , delivery_method_name</span>
+<span class="s2">            FROM</span>
+<span class="s2">                application.delivery_methods&#39;</span>
+<span class="s2">        ) AS t(</span>
+<span class="s2">            delivery_method_id INT</span>
+<span class="s2">            , delivery_method_name TEXT</span>
+<span class="s2">        );</span>
+
+<span class="s2">        ALTER TABLE analytics.dim_delivery_methods ADD PRIMARY KEY (delivery_method_id)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="fact-tables">
+<h2>Fact Tables<a class="headerlink" href="#fact-tables" title="Link to this heading">#</a></h2>
+<section id="orders">
+<h3>Orders<a class="headerlink" href="#orders" title="Link to this heading">#</a></h3>
+<p>Create a fact table for orders.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">wwi_analytics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">stmt</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE analytics.fact_orders AS</span>
+<span class="s2">        SELECT * FROM dblink(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">dblink_conn_str</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">            , &#39;SELECT </span>
+<span class="s2">                order_id</span>
+<span class="s2">                , customer_id</span>
+<span class="s2">                , order_date</span>
+<span class="s2">                , expected_delivery_date</span>
+<span class="s2">                , picking_completed_when</span>
+<span class="s2">            FROM</span>
+<span class="s2">                sales.orders&#39;</span>
+<span class="s2">        ) AS t(</span>
+<span class="s2">            order_id INT</span>
+<span class="s2">            , customer_id INT</span>
+<span class="s2">            , order_date DATE</span>
+<span class="s2">            , expected_delivery_date DATE</span>
+<span class="s2">            , picking_completed_when TIMESTAMP</span>
+<span class="s2">        );</span>
+
+<span class="s2">        ALTER TABLE analytics.fact_orders ADD PRIMARY KEY (order_id);</span>
+<span class="s2">        ALTER TABLE analytics.fact_orders ADD CONSTRAINT fk_orders_customer </span>
+<span class="s2">            FOREIGN KEY (customer_id) REFERENCES analytics.dim_customers(customer_id);</span>
+<span class="s2">        ALTER TABLE analytics.fact_orders ADD CONSTRAINT fk_orders_date</span>
+<span class="s2">            FOREIGN KEY (order_date) REFERENCES analytics.dim_dates(date_id);</span>
+<span class="s2">        CREATE INDEX idx_fact_orders_customer ON analytics.fact_orders(customer_id);</span>
+<span class="s2">        CREATE INDEX idx_fact_orders_date ON analytics.fact_orders(order_date);        </span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="invoices">
+<h3>Invoices<a class="headerlink" href="#invoices" title="Link to this heading">#</a></h3>
+<p>Create a fact table for invoices.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">wwi_analytics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">stmt</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE analytics.fact_invoices AS</span>
+<span class="s2">        SELECT * FROM dblink(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">dblink_conn_str</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">            , &#39;WITH invoice_totals AS (</span>
+<span class="s2">                SELECT</span>
+<span class="s2">                    i.invoice_id</span>
+<span class="s2">                    , SUM(il.line_profit) AS invoice_profit</span>
+<span class="s2">                    , SUM(il.extended_price) AS invoice_amount</span>
+<span class="s2">                    , COUNT(il.invoice_line_id) AS invoice_lines_count</span>
+<span class="s2">                FROM</span>
+<span class="s2">                    sales.invoices i</span>
+<span class="s2">                    LEFT JOIN sales.invoice_lines il ON i.invoice_id = il.invoice_id</span>
+<span class="s2">                GROUP BY</span>
+<span class="s2">                    i.invoice_id</span>
+<span class="s2">            ),</span>
+<span class="s2">            payment_totals AS (</span>
+<span class="s2">                SELECT</span>
+<span class="s2">                    invoice_id</span>
+<span class="s2">                    , SUM(transaction_amount) AS paid_amount</span>
+<span class="s2">                FROM</span>
+<span class="s2">                    sales.customer_transactions</span>
+<span class="s2">                where </span>
+<span class="s2">                    is_finalized = TRUE</span>
+<span class="s2">                GROUP BY</span>
+<span class="s2">                    invoice_id</span>
+<span class="s2">            )</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                i.invoice_id</span>
+<span class="s2">                , i.order_id</span>
+<span class="s2">                , pt.paid_amount</span>
+<span class="s2">                , i.invoice_date</span>
+<span class="s2">                , i.delivery_method_id</span>
+<span class="s2">                , i.confirmed_delivery_time</span>
+<span class="s2">                , i.returned_delivery_data    </span>
+<span class="s2">                , CASE WHEN i.confirmed_delivery_time IS NOT NULL THEN TRUE ELSE FALSE END AS is_delivered</span>
+<span class="s2">                , it.invoice_profit</span>
+<span class="s2">                , it.invoice_amount</span>
+<span class="s2">                , it.invoice_lines_count</span>
+<span class="s2">            FROM </span>
+<span class="s2">                sales.invoices i </span>
+<span class="s2">                LEFT JOIN invoice_totals it ON i.invoice_id = it.invoice_id</span>
+<span class="s2">                LEFT JOIN payment_totals pt ON it.invoice_id = pt.invoice_id;&#39;</span>
+<span class="s2">        ) AS t(</span>
+<span class="s2">            invoice_id INT</span>
+<span class="s2">            , order_id INT</span>
+<span class="s2">            , paid_amount NUMERIC</span>
+<span class="s2">            , invoice_date DATE</span>
+<span class="s2">            , delivery_method_id INT</span>
+<span class="s2">            , confirmed_delivery_time TIMESTAMP</span>
+<span class="s2">            , returned_delivery_data TEXT</span>
+<span class="s2">            , is_delivered BOOLEAN</span>
+<span class="s2">            , invoice_profit NUMERIC</span>
+<span class="s2">            , invoice_amount NUMERIC</span>
+<span class="s2">            , invoice_lines_count INT</span>
+<span class="s2">        );</span>
+
+<span class="s2">        ALTER TABLE analytics.fact_invoices ADD PRIMARY KEY (invoice_id);</span>
+<span class="s2">        ALTER TABLE analytics.fact_invoices ADD CONSTRAINT fk_invoices_order </span>
+<span class="s2">            FOREIGN KEY (order_id) REFERENCES analytics.fact_orders(order_id);</span>
+<span class="s2">        ALTER TABLE analytics.fact_invoices ADD CONSTRAINT fk_invoice_delivery </span>
+<span class="s2">            FOREIGN KEY (delivery_method_id) REFERENCES analytics.dim_delivery_methods(delivery_method_id);</span>
+<span class="s2">        ALTER TABLE analytics.fact_invoices ADD CONSTRAINT fk_invoices_date</span>
+<span class="s2">            FOREIGN KEY (invoice_date) REFERENCES analytics.dim_dates(date_id);</span>
+<span class="s2">        CREATE INDEX idx_fact_invoices_order ON analytics.fact_invoices(order_id);</span>
+<span class="s2">        CREATE INDEX idx_fact_invoices_date ON analytics.fact_invoices(invoice_date);</span>
+<span class="s2">        CREATE INDEX idx_fact_invoices_delivery_status ON analytics.fact_invoices(is_delivered);</span>
+<span class="s2">        CREATE INDEX idx_fact_invoices_delivery_method ON analytics.fact_invoices(delivery_method_id);            </span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="order-lines">
+<h3>Order Lines<a class="headerlink" href="#order-lines" title="Link to this heading">#</a></h3>
+<p>Create a fact table for order lines.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">wwi_analytics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">stmt</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE analytics.fact_order_lines AS</span>
+<span class="s2">        SELECT * FROM dblink(</span>
+<span class="s2">            &#39;</span><span class="si">{</span><span class="n">dblink_conn_str</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">            , &#39;SELECT </span>
+<span class="s2">                ol.order_line_id</span>
+<span class="s2">                , o.order_id</span>
+<span class="s2">                , ol.stock_item_id</span>
+<span class="s2">                , ol.quantity</span>
+<span class="s2">                , ol.unit_price</span>
+<span class="s2">                , il.quantity AS il_quantity</span>
+<span class="s2">                , il.line_profit AS il_line_profit</span>
+<span class="s2">                , il.extended_price AS il_extended_price</span>
+<span class="s2">            FROM</span>
+<span class="s2">                sales.orders o</span>
+<span class="s2">                LEFT JOIN sales.order_lines ol ON o.order_id = ol.order_id</span>
+<span class="s2">                LEFT JOIN sales.invoices i ON i.order_id = o.order_id</span>
+<span class="s2">                LEFT JOIN sales.invoice_lines il ON i.invoice_id = il.invoice_id AND ol.stock_item_id = il.stock_item_id&#39;</span>
+<span class="s2">        ) AS t(</span>
+<span class="s2">            order_line_id INT</span>
+<span class="s2">            , order_id INT</span>
+<span class="s2">            , stock_item_id INT</span>
+<span class="s2">            , quantity INT</span>
+<span class="s2">            , unit_price NUMERIC</span>
+<span class="s2">            , il_quantity INT</span>
+<span class="s2">            , il_line_profit NUMERIC</span>
+<span class="s2">            , il_extended_price NUMERIC</span>
+<span class="s2">        );</span>
+
+<span class="s2">        ALTER TABLE analytics.fact_order_lines ADD PRIMARY KEY (order_line_id);</span>
+<span class="s2">        ALTER TABLE analytics.fact_order_lines ADD CONSTRAINT fk_orderlines_order </span>
+<span class="s2">            FOREIGN KEY (order_id) REFERENCES analytics.fact_orders(order_id);</span>
+<span class="s2">        ALTER TABLE analytics.fact_order_lines ADD CONSTRAINT fk_orderlines_product </span>
+<span class="s2">            FOREIGN KEY (stock_item_id) REFERENCES analytics.dim_products(stock_item_id);      </span>
+<span class="s2">        CREATE INDEX idx_fact_order_lines_product ON analytics.fact_order_lines(stock_item_id);</span>
+<span class="s2">        CREATE INDEX idx_fact_order_lines_order ON analytics.fact_order_lines(order_id);  </span>
+<span class="s2">        CREATE INDEX idx_fact_order_lines_profit ON analytics.fact_order_lines(il_line_profit);             </span>
+<span class="s2">        CREATE INDEX idx_fact_order_extended_price ON analytics.fact_order_lines(il_extended_price);             </span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Update database statistics to ensure optimal query performance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span>
+<span class="n">ANALYZE</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_customers</span><span class="p">;</span>
+<span class="n">ANALYZE</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_products</span><span class="p">;</span>
+<span class="n">ANALYZE</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_dates</span><span class="p">;</span>
+<span class="n">ANALYZE</span> <span class="n">analytics</span><span class="o">.</span><span class="n">dim_delivery_methods</span><span class="p">;</span>
+<span class="n">ANALYZE</span> <span class="n">analytics</span><span class="o">.</span><span class="n">fact_orders</span><span class="p">;</span>
+<span class="n">ANALYZE</span> <span class="n">analytics</span><span class="o">.</span><span class="n">fact_invoices</span><span class="p">;</span>
+<span class="n">ANALYZE</span> <span class="n">analytics</span><span class="o">.</span><span class="n">fact_order_lines</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>As a result, we obtained the following schema.</p>
+<img alt="" src="../_images/er_analytics.png" />
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02_data_description_and_exploration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Description and Exploration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="04_creating_materialized_views.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Creating Materialized Views</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#database-schema-selection">Database Schema Selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dimension-tables">Dimension Tables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customers">Customers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#products">Products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dates">Dates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delivery-methods">Delivery Methods</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fact-tables">Fact Tables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#orders">Orders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invoices">Invoices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-lines">Order Lines</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Pavel Grigoryev
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Pavel Grigoryev.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1064 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ETL Process (Airflow DAG) &#8212; #🌐 WWI Data Pipeline and Dashboard</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=aa5847ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/custom.js?v=f9582d1e"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'contents/05_etl_process';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dashboard Canvas" href="06_dashboard_canvas.html" />
+    <link rel="prev" title="Creating Materialized Views" href="04_creating_materialized_views.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.jpg" class="logo__image only-light" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>
+    <script>document.write(`<img src="../_static/logo-dark.jpg" class="logo__image only-dark" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    🌐 WWI Data Pipeline and Dashboard
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_database_connection.html">Database Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_data_description_and_exploration.html">Data Description and Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_designing_the_analytical_database.html">Designing the Analytical Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_creating_materialized_views.html">Creating Materialized Views</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">ETL Process (Airflow DAG)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_dashboard_canvas.html">Dashboard Canvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_dashboard_mockup.html">Dashboard Mockup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_compiling_brief_documentation.html">Compiling Brief Documentation for the Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_final_dashboard.html">Final Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_general_conclusion.html">General Conclusion</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/PavelGrigoryevDS/wwi-data-pipeline-dashboard" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/contents/05_etl_process.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>ETL Process (Airflow DAG)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="etl-process-airflow-dag">
+<h1>ETL Process (Airflow DAG)<a class="headerlink" href="#etl-process-airflow-dag" title="Link to this heading">#</a></h1>
+<p>Create an Airflow DAG that will daily add data from the previous day to the analytical database.</p>
+<p>To track changes in dimensions, we will use Slowly Changing Dimension Type 2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">dag</span><span class="p">,</span> <span class="n">task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.providers.postgres.hooks.postgres</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostgresHook</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
+    
+<span class="c1"># Constants</span>
+<span class="n">SCHEMA_NAME</span> <span class="o">=</span> <span class="s1">&#39;analytics&#39;</span>
+<span class="n">DIM_CUSTOMERS_TABLE</span> <span class="o">=</span> <span class="s1">&#39;dim_customers&#39;</span>
+<span class="n">DIM_PRODUCTS_TABLE</span> <span class="o">=</span> <span class="s1">&#39;dim_products&#39;</span>
+
+<span class="c1"># SCD Configuration for Type 2 dimensions</span>
+<span class="n">SCD_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;customers&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;id_column&#39;</span><span class="p">:</span> <span class="s1">&#39;customer_id&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;change_columns&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;customer_name&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_category_name&#39;</span><span class="p">,</span> <span class="s1">&#39;city_name&#39;</span><span class="p">,</span> <span class="s1">&#39;state_province_name&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;target_table&#39;</span><span class="p">:</span> <span class="n">DIM_CUSTOMERS_TABLE</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;products&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;id_column&#39;</span><span class="p">:</span> <span class="s1">&#39;stock_item_id&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;change_columns&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;stock_item_name&#39;</span><span class="p">,</span> <span class="s1">&#39;stock_group_names&#39;</span><span class="p">,</span> <span class="s1">&#39;color_name&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;unit_package_type_name&#39;</span><span class="p">,</span> <span class="s1">&#39;outer_package_type_name&#39;</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;target_table&#39;</span><span class="p">:</span> <span class="n">DIM_PRODUCTS_TABLE</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Database connections</span>
+<span class="n">SRC_DB_ID</span> <span class="o">=</span> <span class="s1">&#39;neon_wwi&#39;</span>
+<span class="n">DST_DB_ID</span> <span class="o">=</span> <span class="s1">&#39;neon_analytics&#39;</span>
+<span class="n">src_hook</span> <span class="o">=</span> <span class="n">PostgresHook</span><span class="p">(</span><span class="n">postgres_conn_id</span><span class="o">=</span><span class="n">SRC_DB_ID</span><span class="p">)</span>
+<span class="n">dst_hook</span> <span class="o">=</span> <span class="n">PostgresHook</span><span class="p">(</span><span class="n">postgres_conn_id</span><span class="o">=</span><span class="n">DST_DB_ID</span><span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="s1">&#39;analytics_team&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;depends_on_past&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+    <span class="s1">&#39;retries&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;retry_delay&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s1">&#39;email_on_failure&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;email_on_retry&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">dag_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default_args&#39;</span><span class="p">:</span> <span class="n">default_args</span><span class="p">,</span>
+    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Daily ETL pipeline for loading data from operational DB to analytics warehouse&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="s1">&#39;0 3 * * *&#39;</span><span class="p">,</span> <span class="c1"># Runs at 3 AM daily</span>
+    <span class="s1">&#39;catchup&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;analytics&#39;</span><span class="p">,</span> <span class="s1">&#39;etl&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;max_active_runs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;doc_md&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    # Analytics Daily ETL Pipeline</span>
+
+<span class="s2">    This DAG performs daily incremental load from operational database (WWI) to analytics data warehouse.</span>
+
+<span class="s2">    ## Main Tasks:</span>
+<span class="s2">    - Extract daily orders, invoices, and order lines</span>
+<span class="s2">    - Process SCD Type 2 for customer and product dimensions</span>
+<span class="s2">    - Load fact and dimension tables</span>
+
+<span class="s2">    ## Dependencies:</span>
+<span class="s2">    - Requires Postgres connections: `neon_wwi` and `neon_analytics`</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+<span class="p">}</span>
+
+<span class="n">QUERY_EXTRACT_ORDERS</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        order_id</span>
+<span class="s2">        , customer_id</span>
+<span class="s2">        , order_date</span>
+<span class="s2">        , expected_delivery_date</span>
+<span class="s2">        , picking_completed_when</span>
+<span class="s2">    FROM</span>
+<span class="s2">        sales.orders</span>
+<span class="s2">    WHERE</span>
+<span class="s2">        order_date = :yesterday_ds</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">QUERY_EXTRACT_INVOICES</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    WITH invoice_totals AS (</span>
+<span class="s2">        SELECT</span>
+<span class="s2">            i.invoice_id</span>
+<span class="s2">            , SUM(il.line_profit) AS invoice_profit</span>
+<span class="s2">            , SUM(il.extended_price) AS invoice_amount</span>
+<span class="s2">            , COUNT(il.invoice_line_id) AS invoice_lines_count</span>
+<span class="s2">        FROM</span>
+<span class="s2">            sales.invoices i</span>
+<span class="s2">        LEFT JOIN sales.invoice_lines il ON i.invoice_id = il.invoice_id</span>
+<span class="s2">        WHERE</span>
+<span class="s2">            i.invoice_date = :yesterday_ds</span>
+<span class="s2">        GROUP BY</span>
+<span class="s2">            i.invoice_id</span>
+<span class="s2">    ),</span>
+<span class="s2">    payment_totals AS (</span>
+<span class="s2">        SELECT</span>
+<span class="s2">            invoice_id</span>
+<span class="s2">            , SUM(transaction_amount) AS paid_amount</span>
+<span class="s2">        FROM</span>
+<span class="s2">            sales.customer_transactions</span>
+<span class="s2">        WHERE</span>
+<span class="s2">            is_finalized = TRUE</span>
+<span class="s2">            AND invoice_id IN (</span>
+<span class="s2">                SELECT invoice_id</span>
+<span class="s2">                FROM sales.invoices</span>
+<span class="s2">                WHERE invoice_date = :yesterday_ds</span>
+<span class="s2">        )</span>
+<span class="s2">        GROUP BY</span>
+<span class="s2">            invoice_id</span>
+<span class="s2">    )</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        i.invoice_id</span>
+<span class="s2">        , i.order_id</span>
+<span class="s2">        , COALESCE(pt.paid_amount, 0) AS paid_amount</span>
+<span class="s2">        , i.invoice_date</span>
+<span class="s2">        , i.delivery_method_id</span>
+<span class="s2">        , i.confirmed_delivery_time</span>
+<span class="s2">        , i.returned_delivery_data</span>
+<span class="s2">        , CASE WHEN i.confirmed_delivery_time IS NOT NULL THEN TRUE ELSE FALSE END AS is_delivered</span>
+<span class="s2">        , COALESCE(it.invoice_profit, 0) AS invoice_profit</span>
+<span class="s2">        , COALESCE(it.invoice_amount, 0) AS invoice_amount</span>
+<span class="s2">        , COALESCE(it.invoice_lines_count, 0) AS invoice_lines_count</span>
+<span class="s2">    FROM</span>
+<span class="s2">        sales.invoices i</span>
+<span class="s2">    LEFT JOIN invoice_totals it ON i.invoice_id = it.invoice_id</span>
+<span class="s2">    LEFT JOIN payment_totals pt ON i.invoice_id = pt.invoice_id</span>
+<span class="s2">    WHERE</span>
+<span class="s2">        i.invoice_date = :yesterday_ds</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">QUERY_EXTRACT_ORDER_LINES</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        ol.order_line_id</span>
+<span class="s2">        , o.order_id</span>
+<span class="s2">        , ol.stock_item_id</span>
+<span class="s2">        , ol.quantity</span>
+<span class="s2">        , ol.unit_price</span>
+<span class="s2">        , il.quantity AS il_quantity</span>
+<span class="s2">        , il.line_profit AS il_line_profit</span>
+<span class="s2">        , il.extended_price AS il_extended_price</span>
+<span class="s2">    FROM</span>
+<span class="s2">        sales.orders o</span>
+<span class="s2">        LEFT JOIN sales.order_lines ol ON o.order_id = ol.order_id</span>
+<span class="s2">        LEFT JOIN sales.invoices i ON i.order_id = o.order_id</span>
+<span class="s2">        LEFT JOIN sales.invoice_lines il ON i.invoice_id = il.invoice_id AND ol.stock_item_id = il.stock_item_id</span>
+<span class="s2">    WHERE</span>
+<span class="s2">        o.order_date = :yesterday_ds</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">QUERY_EXTRACT_CUSTOMERS_SRC</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        c.customer_id</span>
+<span class="s2">        , c.customer_name</span>
+<span class="s2">        , cc.customer_category_name</span>
+<span class="s2">        , ci.city_name</span>
+<span class="s2">        , sp.state_province_name</span>
+<span class="s2">    FROM</span>
+<span class="s2">        sales.customers c</span>
+<span class="s2">        LEFT JOIN sales.customer_categories cc</span>
+<span class="s2">            ON c.customer_category_id = cc.customer_category_id</span>
+<span class="s2">        LEFT JOIN application.cities ci</span>
+<span class="s2">            ON c.delivery_city_id = ci.city_id</span>
+<span class="s2">        LEFT JOIN application.state_provinces sp</span>
+<span class="s2">            ON ci.state_province_id = sp.state_province_id         </span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">QUERY_EXTRACT_CUSTOMERS_DST</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        *</span>
+<span class="s2">    FROM</span>
+<span class="s2">        analytics.dim_customers</span>
+<span class="s2">    WHERE</span>
+<span class="s2">        current_record = TRUE</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">QUERY_EXTRACT_PRODUCTS_SRC</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    WITH stock_groups_agg AS (</span>
+<span class="s2">        SELECT</span>
+<span class="s2">            sisg.stock_item_id</span>
+<span class="s2">            , STRING_AGG(sg.stock_group_name, &#39;, &#39;) AS stock_group_names</span>
+<span class="s2">        FROM</span>
+<span class="s2">            warehouse.stock_item_stock_groups sisg</span>
+<span class="s2">            LEFT JOIN warehouse.stock_groups sg</span>
+<span class="s2">                ON sisg.stock_group_id = sg.stock_group_id</span>
+<span class="s2">        GROUP</span>
+<span class="s2">            BY sisg.stock_item_id</span>
+<span class="s2">    )</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        si.stock_item_id</span>
+<span class="s2">        , si.stock_item_name</span>
+<span class="s2">        , sg.stock_group_names</span>
+<span class="s2">        , c.color_name</span>
+<span class="s2">        , ptu.package_type_name AS unit_package_type_name</span>
+<span class="s2">        , pto.package_type_name AS outer_package_type_name</span>
+<span class="s2">        , si.brand</span>
+<span class="s2">        , si.size</span>
+<span class="s2">    FROM</span>
+<span class="s2">        warehouse.stock_items si</span>
+<span class="s2">        LEFT JOIN stock_groups_agg sg</span>
+<span class="s2">            ON si.stock_item_id = sg.stock_item_id</span>
+<span class="s2">        LEFT JOIN warehouse.package_types ptu</span>
+<span class="s2">            ON si.unit_package_id = ptu.package_type_id</span>
+<span class="s2">        LEFT JOIN warehouse.package_types pto</span>
+<span class="s2">            ON si.outer_package_id = pto.package_type_id</span>
+<span class="s2">        LEFT JOIN warehouse.colors c</span>
+<span class="s2">            ON c.color_id = si.color_id</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">QUERY_EXTRACT_PRODUCTS_DST</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        *</span>
+<span class="s2">    FROM</span>
+<span class="s2">        analytics.dim_products</span>
+<span class="s2">    WHERE</span>
+<span class="s2">        current_record = TRUE</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_etl_failure</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enhanced error handling for ETL tasks&quot;&quot;&quot;</span>
+    <span class="n">task_instance</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;task_instance&#39;</span><span class="p">]</span>
+    <span class="n">exception</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;exception&#39;</span><span class="p">)</span>
+    <span class="n">execution_date</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;execution_date&#39;</span><span class="p">]</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ETL Task </span><span class="si">{</span><span class="n">task_instance</span><span class="o">.</span><span class="n">task_id</span><span class="si">}</span><span class="s2"> failed on </span><span class="si">{</span><span class="n">execution_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task try number: </span><span class="si">{</span><span class="n">task_instance</span><span class="o">.</span><span class="n">try_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Send email notification (uses Airflow&#39;s default email config)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">task_instance</span><span class="o">.</span><span class="n">email_on_failure</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ETL Failure: </span><span class="si">{</span><span class="n">task_instance</span><span class="o">.</span><span class="n">task_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">html_content</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to send failure email: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_column_comparison</span><span class="p">(</span><span class="n">col1</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">col2</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Safe column comparison handling NULL values appropriately</span>
+<span class="sd">    Returns boolean series indicating where values differ</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">col1</span> <span class="o">!=</span> <span class="n">col2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">col1</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">col2</span><span class="o">.</span><span class="n">isna</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">detect_scd_type2_changes</span><span class="p">(</span><span class="n">source_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">target_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect changes for SCD Type 2 dimension processing&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">source_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Source DataFrame is empty - no changes to process&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">SCD_CONFIG</span><span class="p">[</span><span class="n">entity_type</span><span class="p">]</span>
+    <span class="n">id_col</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;id_column&#39;</span><span class="p">]</span>
+    <span class="n">change_cols</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;change_columns&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Check duplicates</span>
+    <span class="k">if</span> <span class="n">source_df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="n">id_col</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicate IDs found in source data for </span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">source_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">id_col</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s1">_src&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">target_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">id_col</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s1">_dst&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Merge data</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">source_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">target_df</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s1">_src&#39;</span><span class="p">,</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s1">_dst&#39;</span><span class="p">,</span>
+        <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_src&#39;</span><span class="p">,</span> <span class="s1">&#39;_dst&#39;</span><span class="p">],</span>
+        <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Build conditions for changes</span>
+    <span class="n">change_conditions</span> <span class="o">=</span> <span class="p">[</span><span class="n">merged</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s1">_dst&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">change_cols</span><span class="p">:</span>
+        <span class="n">change_conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">safe_column_comparison</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">_src&#39;</span><span class="p">],</span> <span class="n">merged</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">_dst&#39;</span><span class="p">])</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Combine conditions</span>
+    <span class="n">changes_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">change_conditions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">changes</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="n">changes_mask</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">changes</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No dimension changes detected for </span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Prepare result</span>
+    <span class="n">result_columns</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s1">_src&#39;</span><span class="p">:</span> <span class="n">id_col</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">change_cols</span><span class="p">:</span>
+        <span class="n">result_columns</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">_src&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">changes</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">result_columns</span><span class="o">.</span><span class="n">keys</span><span class="p">())]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">result_columns</span><span class="p">)</span>
+
+    <span class="c1"># Add SCD metadata</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;valid_from&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;valid_to&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;current_record&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> changes for </span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_scd_data</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate dimension data before loading&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">SCD_CONFIG</span><span class="p">[</span><span class="n">entity_type</span><span class="p">]</span>
+    <span class="n">id_col</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;id_column&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Check required columns</span>
+    <span class="n">required_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">id_col</span><span class="p">,</span> <span class="s1">&#39;valid_from&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_to&#39;</span><span class="p">,</span> <span class="s1">&#39;current_record&#39;</span><span class="p">]</span>
+    <span class="n">missing_columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">required_columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">missing_columns</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required columns: </span><span class="si">{</span><span class="n">missing_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Validate primary key</span>
+    <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NULL values found in primary key column: </span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Check for duplicates</span>
+    <span class="n">duplicate_ids</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="n">id_col</span><span class="p">])]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">duplicate_ids</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">duplicate_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> duplicate IDs in source data&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_scd_type_2</span><span class="p">(</span><span class="n">changed_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load dimension changes using SCD Type 2 approach&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">changed_data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">changed_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No changes to load for </span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">SCD_CONFIG</span><span class="p">[</span><span class="n">entity_type</span><span class="p">]</span>
+    <span class="n">id_col</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;id_column&#39;</span><span class="p">]</span>
+    <span class="n">table_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;dim_</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">dst_hook</span><span class="o">.</span><span class="n">get_sqlalchemy_engine</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">engine</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+            <span class="c1"># Update existing records</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="n">changed_data</span><span class="p">[</span><span class="n">id_col</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">ids</span><span class="p">:</span>
+                <span class="n">update_sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    UPDATE </span><span class="si">{</span><span class="n">SCHEMA_NAME</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span>
+<span class="s2">                    SET</span>
+<span class="s2">                        valid_to = CURRENT_DATE - INTERVAL &#39;1 day&#39;</span>
+<span class="s2">                        , current_record = FALSE</span>
+<span class="s2">                    WHERE</span>
+<span class="s2">                        </span><span class="si">{</span><span class="n">id_col</span><span class="si">}</span><span class="s2"> = ANY(:ids)</span>
+<span class="s2">                        AND current_record = TRUE</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+                
+                <span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">update_sql</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ids&#39;</span><span class="p">:</span> <span class="n">ids</span><span class="p">})</span>
+                <span class="c1"># Insert new records</span>
+                <span class="n">changed_data</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span>
+                    <span class="n">table_name</span><span class="p">,</span>
+                    <span class="n">connection</span><span class="p">,</span>
+                    <span class="n">schema</span><span class="o">=</span><span class="n">SCHEMA_NAME</span><span class="p">,</span>
+                    <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span>
+                <span class="p">)</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> new records for </span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load </span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2"> dimension: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+<span class="nd">@dag</span><span class="p">(</span><span class="o">**</span><span class="n">dag_config</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">wwi_to_analytics_daily</span><span class="p">():</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_orders</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts daily orders data from source system for incremental processing.&quot;&quot;&quot;</span>
+        <span class="n">logical_date</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;logical_date&#39;</span><span class="p">]</span>
+        <span class="n">yesterday_ds</span> <span class="o">=</span> <span class="p">(</span><span class="n">logical_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">src_hook</span><span class="o">.</span><span class="n">get_pandas_df</span><span class="p">(</span><span class="n">QUERY_EXTRACT_ORDERS</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;yesterday_ds&#39;</span><span class="p">:</span> <span class="n">yesterday_ds</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_invoices</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts invoice information with calculated totals and payment status for the processing date.&quot;&quot;&quot;</span>
+        <span class="n">logical_date</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;logical_date&#39;</span><span class="p">]</span>
+        <span class="n">yesterday_ds</span> <span class="o">=</span> <span class="p">(</span><span class="n">logical_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>        
+        <span class="n">result</span> <span class="o">=</span> <span class="n">src_hook</span><span class="o">.</span><span class="n">get_pandas_df</span><span class="p">(</span><span class="n">QUERY_EXTRACT_INVOICES</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;yesterday_ds&#39;</span><span class="p">:</span> <span class="n">yesterday_ds</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_order_lines</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts order line details with associated invoice information for daily sales analysis.&quot;&quot;&quot;</span>
+        <span class="n">logical_date</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;logical_date&#39;</span><span class="p">]</span>
+        <span class="n">yesterday_ds</span> <span class="o">=</span> <span class="p">(</span><span class="n">logical_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>           
+        <span class="n">result</span> <span class="o">=</span> <span class="n">src_hook</span><span class="o">.</span><span class="n">get_pandas_df</span><span class="p">(</span><span class="n">QUERY_EXTRACT_ORDER_LINES</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;yesterday_ds&#39;</span><span class="p">:</span> <span class="n">yesterday_ds</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_customers_src</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts current customer master data including categories and geographical information from source.&quot;&quot;&quot;</span>       
+        <span class="n">result</span> <span class="o">=</span> <span class="n">src_hook</span><span class="o">.</span><span class="n">get_pandas_df</span><span class="p">(</span><span class="n">QUERY_EXTRACT_CUSTOMERS_SRC</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_customers_dst</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts existing customer dimension records from analytics warehouse for change detection.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">dst_hook</span><span class="o">.</span><span class="n">get_pandas_df</span><span class="p">(</span><span class="n">QUERY_EXTRACT_CUSTOMERS_DST</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_products_src</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts product master data with attributes and classifications from operational database.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">src_hook</span><span class="o">.</span><span class="n">get_pandas_df</span><span class="p">(</span><span class="n">QUERY_EXTRACT_PRODUCTS_SRC</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_products_dst</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts current product dimension records from data warehouse for SCD comparison.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">dst_hook</span><span class="o">.</span><span class="n">get_pandas_df</span><span class="p">(</span><span class="n">QUERY_EXTRACT_PRODUCTS_DST</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_source_data</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Basic data validation&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty DataFrame for </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty data for </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">null_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NULL values found in columns: </span><span class="si">{</span><span class="n">null_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> duplicates in </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform_check_changed_customers</span><span class="p">(</span><span class="n">customers_src</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">customers_dst</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identifies customer dimension changes using SCD Type 2 logic for incremental updates.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">detect_scd_type2_changes</span><span class="p">(</span><span class="n">customers_src</span><span class="p">,</span> <span class="n">customers_dst</span><span class="p">,</span> <span class="s1">&#39;customers&#39;</span><span class="p">)</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform_check_changed_products</span><span class="p">(</span><span class="n">products_src</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">products_dst</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identifies product dimension modifications requiring new version creation in the warehouse.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">detect_scd_type2_changes</span><span class="p">(</span><span class="n">products_src</span><span class="p">,</span> <span class="n">products_dst</span><span class="p">,</span> <span class="s1">&#39;products&#39;</span><span class="p">)</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_fact_orders</span><span class="p">(</span><span class="n">df_orders</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load orders fact table&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">df_orders</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No orders data to load&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">engine</span> <span class="o">=</span> <span class="n">dst_hook</span><span class="o">.</span><span class="n">get_sqlalchemy_engine</span><span class="p">()</span>
+            <span class="n">df_orders</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span>
+                <span class="s1">&#39;fact_orders&#39;</span><span class="p">,</span>
+                <span class="n">engine</span><span class="p">,</span>
+                <span class="n">schema</span><span class="o">=</span><span class="n">SCHEMA_NAME</span><span class="p">,</span>
+                <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_orders</span><span class="p">)</span><span class="si">}</span><span class="s2"> orders&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load orders: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+    
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_fact_invoices</span><span class="p">(</span><span class="n">df_invoices</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load invoices fact table&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">df_invoices</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No invoices data to load&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">engine</span> <span class="o">=</span> <span class="n">dst_hook</span><span class="o">.</span><span class="n">get_sqlalchemy_engine</span><span class="p">()</span>
+            <span class="n">df_invoices</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span>
+                <span class="s1">&#39;fact_invoices&#39;</span><span class="p">,</span>
+                <span class="n">engine</span><span class="p">,</span>
+                <span class="n">schema</span><span class="o">=</span><span class="n">SCHEMA_NAME</span><span class="p">,</span>
+                <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_invoices</span><span class="p">)</span><span class="si">}</span><span class="s2"> invoices&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load invoices: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+        
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_fact_order_lines</span><span class="p">(</span><span class="n">df_order_lines</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load order lines fact table&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">df_order_lines</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No order lines data to load&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">engine</span> <span class="o">=</span> <span class="n">dst_hook</span><span class="o">.</span><span class="n">get_sqlalchemy_engine</span><span class="p">()</span>
+            <span class="n">df_order_lines</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span>
+                <span class="s1">&#39;fact_order_lines&#39;</span><span class="p">,</span>
+                <span class="n">engine</span><span class="p">,</span>
+                <span class="n">schema</span><span class="o">=</span><span class="n">SCHEMA_NAME</span><span class="p">,</span>
+                <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_order_lines</span><span class="p">)</span><span class="si">}</span><span class="s2"> order lines&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load order lines: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+        
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_scd_type_2_customers</span><span class="p">(</span><span class="n">changed_customers</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads customer dimension changes by closing old records and inserting new versions with validation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">validate_scd_data</span><span class="p">(</span><span class="n">changed_customers</span><span class="p">,</span> <span class="s1">&#39;customers&#39;</span><span class="p">):</span>
+            <span class="n">load_scd_type_2</span><span class="p">(</span><span class="n">changed_customers</span><span class="p">,</span> <span class="s1">&#39;customers&#39;</span><span class="p">)</span>
+
+    <span class="nd">@task</span><span class="p">(</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">on_failure_callback</span><span class="o">=</span><span class="n">handle_etl_failure</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_scd_type_2_products</span><span class="p">(</span><span class="n">changed_products</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies product dimension updates using SCD Type 2 pattern with data quality checks.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">validate_scd_data</span><span class="p">(</span><span class="n">changed_products</span><span class="p">,</span> <span class="s1">&#39;products&#39;</span><span class="p">):</span>
+            <span class="n">load_scd_type_2</span><span class="p">(</span><span class="n">changed_products</span><span class="p">,</span> <span class="s1">&#39;products&#39;</span><span class="p">)</span>
+
+    <span class="c1"># ==========================================================================</span>
+    <span class="c1"># WORKFLOW</span>
+    <span class="c1"># ==========================================================================</span>
+
+    <span class="c1"># Extract</span>
+    <span class="n">df_orders</span> <span class="o">=</span> <span class="n">extract_orders</span><span class="p">()</span>
+    <span class="n">df_invoices</span> <span class="o">=</span> <span class="n">extract_invoices</span><span class="p">()</span>
+    <span class="n">df_order_lines</span> <span class="o">=</span> <span class="n">extract_order_lines</span><span class="p">()</span>
+
+    <span class="n">df_customers_src</span> <span class="o">=</span> <span class="n">extract_customers_src</span><span class="p">()</span>
+    <span class="n">df_customers_dst</span> <span class="o">=</span> <span class="n">extract_customers_dst</span><span class="p">()</span>
+    <span class="n">df_products_src</span> <span class="o">=</span> <span class="n">extract_products_src</span><span class="p">()</span>
+    <span class="n">df_products_dst</span> <span class="o">=</span> <span class="n">extract_products_dst</span><span class="p">()</span>
+
+    <span class="c1"># Validate</span>
+    <span class="n">df_orders_valid</span> <span class="o">=</span> <span class="n">validate_source_data</span><span class="p">(</span><span class="n">df_orders</span><span class="p">,</span> <span class="s2">&quot;orders&quot;</span><span class="p">)</span>
+    <span class="n">df_invoices_valid</span> <span class="o">=</span> <span class="n">validate_source_data</span><span class="p">(</span><span class="n">df_invoices</span><span class="p">,</span> <span class="s2">&quot;invoices&quot;</span><span class="p">)</span>
+    <span class="n">df_order_lines_valid</span> <span class="o">=</span> <span class="n">validate_source_data</span><span class="p">(</span><span class="n">df_order_lines</span><span class="p">,</span> <span class="s2">&quot;order_lines&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Transform</span>
+    <span class="n">df_customers_changes</span> <span class="o">=</span> <span class="n">transform_check_changed_customers</span><span class="p">(</span><span class="n">df_customers_src</span><span class="p">,</span> <span class="n">df_customers_dst</span><span class="p">)</span>
+    <span class="n">df_products_changes</span> <span class="o">=</span> <span class="n">transform_check_changed_products</span><span class="p">(</span><span class="n">df_products_src</span><span class="p">,</span> <span class="n">df_products_dst</span><span class="p">)</span>
+
+    <span class="c1"># Load facts</span>
+    <span class="n">load_fact_orders</span><span class="p">(</span><span class="n">df_orders_valid</span><span class="p">)</span>
+    <span class="n">load_fact_invoices</span><span class="p">(</span><span class="n">df_invoices_valid</span><span class="p">)</span>
+    <span class="n">load_fact_order_lines</span><span class="p">(</span><span class="n">df_order_lines_valid</span><span class="p">)</span>
+    
+    <span class="c1"># Load dimensions</span>
+    <span class="n">load_scd_type_2_customers</span><span class="p">(</span><span class="n">df_customers_changes</span><span class="p">)</span>
+    <span class="n">load_scd_type_2_products</span><span class="p">(</span><span class="n">df_products_changes</span><span class="p">)</span>
+
+<span class="c1"># ==========================================================================</span>
+<span class="c1"># Instantiate the DAG</span>
+<span class="c1"># ==========================================================================</span>
+
+<span class="n">wwi_to_analytics_daily</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="04_creating_materialized_views.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Creating Materialized Views</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="06_dashboard_canvas.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dashboard Canvas</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Pavel Grigoryev
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Pavel Grigoryev.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

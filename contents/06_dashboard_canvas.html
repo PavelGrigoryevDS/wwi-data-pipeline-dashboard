@@ -1,0 +1,786 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dashboard Canvas &#8212; #🌐 WWI Data Pipeline and Dashboard</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=aa5847ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/custom.js?v=f9582d1e"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'contents/06_dashboard_canvas';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dashboard Mockup" href="07_dashboard_mockup.html" />
+    <link rel="prev" title="ETL Process (Airflow DAG)" href="05_etl_process.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.jpg" class="logo__image only-light" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>
+    <script>document.write(`<img src="../_static/logo-dark.jpg" class="logo__image only-dark" alt="#🌐 WWI Data Pipeline and Dashboard - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    🌐 WWI Data Pipeline and Dashboard
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_database_connection.html">Database Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_data_description_and_exploration.html">Data Description and Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_designing_the_analytical_database.html">Designing the Analytical Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_creating_materialized_views.html">Creating Materialized Views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_etl_process.html">ETL Process (Airflow DAG)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dashboard Canvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_dashboard_mockup.html">Dashboard Mockup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_compiling_brief_documentation.html">Compiling Brief Documentation for the Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_final_dashboard.html">Final Dashboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_general_conclusion.html">General Conclusion</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/PavelGrigoryevDS/wwi-data-pipeline-dashboard" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/contents/06_dashboard_canvas.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Dashboard Canvas</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#users-and-context">Users and Context</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-understanding">Task Understanding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-dimensions-and-data-sources">Metrics, Dimensions, and Data Sources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-and-business-decisions">Questions and Business Decisions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizations-for-questions">Visualizations for Questions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dashboard-canvas">
+<h1>Dashboard Canvas<a class="headerlink" href="#dashboard-canvas" title="Link to this heading">#</a></h1>
+<section id="users-and-context">
+<h2>Users and Context<a class="headerlink" href="#users-and-context" title="Link to this heading">#</a></h2>
+<p><strong>Who will use it?</strong></p>
+<ul class="simple">
+<li><p><strong>Top Management</strong></p></li>
+<li><p><strong>Sales Managers</strong></p></li>
+<li><p><strong>Procurement and Logistics Specialists</strong></p></li>
+<li><p><strong>Financial Analysts</strong></p></li>
+</ul>
+<p><strong>Roles, Tasks, and Interaction Context</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Role</p></th>
+<th class="head"><p>Tasks</p></th>
+<th class="head"><p>Usage Context</p></th>
+<th class="head"><p>Frequency</p></th>
+<th class="head"><p>Devices</p></th>
+<th class="head"><p>Interaction Time</p></th>
+<th class="head"><p>Special Requirements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Top Management</strong></p></td>
+<td><p>Strategic decisions, company KPI evaluation</p></td>
+<td><p>Meetings, weekly reports, urgent requests</p></td>
+<td><p>1-2 times/week</p></td>
+<td><p>Laptop, projector</p></td>
+<td><p>10-15 min</p></td>
+<td><p>High-level metrics, mobile access</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sales Managers</strong></p></td>
+<td><p>Sales dynamics analysis, customer work</p></td>
+<td><p>Daily monitoring, negotiation preparation</p></td>
+<td><p>Daily</p></td>
+<td><p>PC/laptop, tablet</p></td>
+<td><p>5-10 min</p></td>
+<td><p>Customer/region breakdown</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Procurement Specialists</strong></p></td>
+<td><p>Inventory control, procurement planning</p></td>
+<td><p>Operational work, pre-order checks</p></td>
+<td><p>Daily</p></td>
+<td><p>PC</p></td>
+<td><p>5-7 min</p></td>
+<td><p>Supplier data integration</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Financial Analysts</strong></p></td>
+<td><p>Profitability deep analysis, forecasting</p></td>
+<td><p>Monthly report preparation, ad-hoc analysis</p></td>
+<td><p>3-5 times/week</p></td>
+<td><p>PC (large screens)</p></td>
+<td><p>15-30 min</p></td>
+<td><p>Data export capability</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Technical Context:</strong></p>
+<ul class="simple">
+<li><p><strong>Mobile version</strong> is critical for CEO (viewing on the go).</p></li>
+<li><p><strong>Printable report versions</strong> are needed for meetings (PDF export).</p></li>
+<li><p><strong>Email distribution</strong> is not required (dashboard is live, data updates in real-time).</p></li>
+</ul>
+</section>
+<section id="task-understanding">
+<h2>Task Understanding<a class="headerlink" href="#task-understanding" title="Link to this heading">#</a></h2>
+<p><strong>Main Dashboard Goal:</strong></p>
+<p>Create a single source of truth for monitoring WWI’s key business metrics that:</p>
+<ul class="simple">
+<li><p>Eliminates manual data collection from different systems</p></li>
+<li><p>Reduces decision-making time</p></li>
+<li><p>Enables real-time problem and opportunity identification</p></li>
+</ul>
+<p><strong>Why is this task important now?</strong></p>
+<ul class="simple">
+<li><p>Business growth has complicated data analysis (Excel reports were sufficient before)</p></li>
+<li><p>Increased number of regional branches requires unified control system</p></li>
+<li><p>Competition demands faster response to market changes</p></li>
+</ul>
+<p><strong>User Expectations:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Role</p></th>
+<th class="head"><p>Main Expectations</p></th>
+<th class="head"><p>Business Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Top Management</strong></p></td>
+<td><p>“I want to see 3 key metrics in 30 seconds”</p></td>
+<td><p>Quick business status assessment</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sales Managers</strong></p></td>
+<td><p>“Need to quickly identify problem regions”</p></td>
+<td><p>Sales increase through targeted interventions</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Logistics Specialists</strong></p></td>
+<td><p>“Automatic alerts for critical stock levels required”</p></td>
+<td><p>Preventing losses from stockouts</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>How the dashboard will change company operations:</strong></p>
+<ul class="simple">
+<li><p>Reduces weekly report preparation time</p></li>
+<li><p>Enables identification of loss-making items</p></li>
+<li><p>Increases response speed to market changes</p></li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul class="simple">
+<li><p>90% of top management uses dashboard as primary data source</p></li>
+<li><p>Decision-making time decreases</p></li>
+<li><p>Number of manual requests to IT department reduces</p></li>
+</ul>
+<p><strong>When do we need to develop it?</strong></p>
+<ul class="simple">
+<li><p>Development timeline: 2 weeks</p></li>
+</ul>
+<p><strong>How will we measure effectiveness?</strong></p>
+<ul class="simple">
+<li><p>Weekly unique users</p></li>
+<li><p>Average dashboard usage time</p></li>
+<li><p>Reduction in manual report requests to IT</p></li>
+<li><p>Feedback from key stakeholders</p></li>
+</ul>
+</section>
+<section id="metrics-dimensions-and-data-sources">
+<h2>Metrics, Dimensions, and Data Sources<a class="headerlink" href="#metrics-dimensions-and-data-sources" title="Link to this heading">#</a></h2>
+<p><strong>Order-level metrics</strong></p>
+<ul class="simple">
+<li><p>Number of orders</p></li>
+<li><p>Order amount</p></li>
+<li><p>Line profit</p></li>
+<li><p>Average order value</p></li>
+<li><p>Average number of line items per order</p></li>
+<li><p>Average number of products per order</p></li>
+<li><p>Average product price in order</p></li>
+<li><p>Order weight</p></li>
+<li><p>Number of categories per order</p></li>
+</ul>
+<p><strong>Order-level dimensions</strong></p>
+<ul class="simple">
+<li><p>Time (year, month, day of week, time of day, hour)</p></li>
+<li><p>Top 3 packaging types/payment types/delivery methods</p></li>
+</ul>
+<p><strong>Customer-level metrics</strong></p>
+<ul class="simple">
+<li><p>Number of customers</p></li>
+<li><p>Number of new customers</p></li>
+<li><p>New customer percentage</p></li>
+<li><p>Purchase amount</p></li>
+<li><p>Average order value</p></li>
+<li><p>Average number of line items per order</p></li>
+</ul>
+<p><strong>Customer-level dimensions</strong></p>
+<ul class="simple">
+<li><p>Customer category</p></li>
+<li><p>Customer state</p></li>
+<li><p>Customer city</p></li>
+</ul>
+<p><strong>Product-level metrics</strong></p>
+<ul class="simple">
+<li><p>Number of units sold</p></li>
+<li><p>Total product sales amount</p></li>
+<li><p>Average sold product price</p></li>
+<li><p>Average number of products per order</p></li>
+</ul>
+<p><strong>Product-level dimensions</strong></p>
+<ul class="simple">
+<li><p>Product category</p></li>
+<li><p>Product internal packaging type</p></li>
+<li><p>Product external packaging type</p></li>
+<li><p>Product colors</p></li>
+</ul>
+<p><strong>Delivery-level metrics</strong></p>
+<ul class="simple">
+<li><p>Delivery time</p></li>
+<li><p>Delivery delay/advance</p></li>
+<li><p>Order picking time</p></li>
+<li><p>Percentage of delayed orders</p></li>
+<li><p>Picking time share of total delivery time</p></li>
+</ul>
+<p><strong>Delivery-level dimensions</strong></p>
+<ul class="simple">
+<li><p>Whether order was delayed</p></li>
+</ul>
+<p><strong>Data Sources</strong></p>
+<ul class="simple">
+<li><p>Orders Materialized View</p></li>
+<li><p>Products Materialized View</p></li>
+</ul>
+</section>
+<section id="questions-and-business-decisions">
+<h2>Questions and Business Decisions<a class="headerlink" href="#questions-and-business-decisions" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Sales Page</p>
+<ul>
+<li><p>What are the values for the last month, what is the trend over the last year, and what is the YoY change for the following metrics:</p>
+<ul>
+<li><p>Revenue</p></li>
+<li><p>Profit</p></li>
+<li><p>Number of sales</p></li>
+<li><p>Average order value</p></li>
+</ul>
+</li>
+<li><p>What are the metric values by states and cities?</p></li>
+<li><p>What are the metric values by customer category?</p></li>
+<li><p>What are the metric values by order delay status?</p></li>
+</ul>
+</li>
+<li><p>Customers Page</p>
+<ul>
+<li><p>What are the values for the last month, what is the trend over the last year, and what is the YoY change for the following metrics:</p>
+<ul>
+<li><p>Number of customers</p></li>
+<li><p>ARPPU (Average Revenue Per Paying User)</p></li>
+<li><p>APC (Average Payment Count)</p></li>
+<li><p>Average number of products per order</p></li>
+</ul>
+</li>
+<li><p>What are the metric values by states and cities?</p></li>
+<li><p>What are the metric values by customer category?</p></li>
+</ul>
+</li>
+<li><p>Products Page</p>
+<ul>
+<li><p>What are the values for the last month, what is the trend over the last year, and what is the YoY change for the following metrics:</p>
+<ul>
+<li><p>Average revenue per product</p></li>
+<li><p>Average profit per product</p></li>
+<li><p>Average number of units sold per product</p></li>
+<li><p>Average product price</p></li>
+</ul>
+</li>
+<li><p>What are the metric values by product categories?</p></li>
+<li><p>What are the metric values by external and internal packaging types?</p></li>
+</ul>
+</li>
+<li><p>Delivery Page</p>
+<ul>
+<li><p>What are the values for the last month, what is the trend over the last year, and what is the YoY change for the following metrics:</p>
+<ul>
+<li><p>Average delivery time</p></li>
+<li><p>Percentage of delayed orders</p></li>
+<li><p>Average delivery delay</p></li>
+<li><p>Average order picking time</p></li>
+</ul>
+</li>
+<li><p>What are the metric values by states and cities?</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="visualizations-for-questions">
+<h2>Visualizations for Questions<a class="headerlink" href="#visualizations-for-questions" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Sales Page</p>
+<ul>
+<li><p>KPI cards with sparklines for:</p>
+<ul>
+<li><p>Revenue</p></li>
+<li><p>Profit</p></li>
+<li><p>Number of sales</p></li>
+<li><p>Average order value</p></li>
+</ul>
+</li>
+<li><p>Table with all metrics by states and cities with bar indicators for values</p></li>
+<li><p>Table with all metrics by delivery delay status with bar indicators for values</p></li>
+<li><p>Table with all metrics by customer category with bar indicators for values</p></li>
+</ul>
+</li>
+<li><p>Customers Page</p>
+<ul>
+<li><p>KPI cards with sparklines for:</p>
+<ul>
+<li><p>Number of customers</p></li>
+<li><p>ARPPU</p></li>
+<li><p>APC</p></li>
+<li><p>Average number of products per order</p></li>
+</ul>
+</li>
+<li><p>Table with all metrics by states and cities with bar indicators for values</p></li>
+<li><p>Table with all metrics by customer category with bar indicators for values</p></li>
+</ul>
+</li>
+<li><p>Products Page</p>
+<ul>
+<li><p>KPI cards with sparklines for:</p>
+<ul>
+<li><p>Average revenue per product</p></li>
+<li><p>Average profit per product</p></li>
+<li><p>Average number of units sold per product</p></li>
+<li><p>Average product price</p></li>
+</ul>
+</li>
+<li><p>Table with all metrics by product categories with bar indicators for values</p></li>
+<li><p>Table with all metrics by external and internal packaging types with bar indicators for values</p></li>
+</ul>
+</li>
+<li><p>Delivery Page</p>
+<ul>
+<li><p>KPI cards with sparklines for:</p>
+<ul>
+<li><p>Average delivery time</p></li>
+<li><p>Percentage of delayed orders</p></li>
+<li><p>Average delivery delay</p></li>
+<li><p>Average order picking time</p></li>
+</ul>
+</li>
+<li><p>Table with all metrics by states and cities with bar indicators for values</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="05_etl_process.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">ETL Process (Airflow DAG)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="07_dashboard_mockup.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dashboard Mockup</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#users-and-context">Users and Context</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-understanding">Task Understanding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-dimensions-and-data-sources">Metrics, Dimensions, and Data Sources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-and-business-decisions">Questions and Business Decisions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizations-for-questions">Visualizations for Questions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Pavel Grigoryev
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Pavel Grigoryev.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
